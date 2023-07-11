@@ -1,0 +1,27 @@
+{
+  "name": "ionomc",
+  "version": "1.0.0",
+  "description": "a electron desktop app for ion",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "electron .",
+    "build": "electron-packager . ionomc --platform=win32 --arch=x64 --version=0.36.0 --overwrite --icon=assets/icon.ico --prune=true --out=release-builds"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hickeyhub/learning-electron.git"
+  },
+  "keywords": [
+    "electron"
+  ],
+  "author": "hickey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hickeyhub/learning-electron/issues"
+  },
+  "homepage": "https://github.com/hickeyhub/learning-electron#readme",
+  "dependencies": {
+    "electron": "^25.2.0"
+  }
+}
