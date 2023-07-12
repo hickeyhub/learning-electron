@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link id="tabs-style" rel="stylesheet" href="./components/tabs/style.css" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <body>
+    <tab-group></tab-group>
+    <script src="./components/tabs/index.js"></script>
+    <script>
+      const tabGroup = document.querySelector("tab-group");
+
+      tabGroup.on("active", (tab) => {
+        ipc.send("tab-active", tab[0].src);
+      });
+
+      tabGroup.setDefaultTab({
+        title: "经营管理中心",
+        src: "https://portaltest.ionrocking.com/",
+        active: true,
+      });
+
+      tabGroup.addTab({
+        title: "经营管理中心",
+        src: "https://portaltest.ionrocking.com/",
+        active: true,
+      });
+
+      ipc.on("add-tab", (src) => {
+        tabGroup.addTab({
+          title: Date.now(),
+          src: src,
+        });
+      });
+
+      tabGroup.on("ready", (tab) => {
+        ipc.send("ready", "ready:ok");
+      });
+
+      // tabGroup.addTab({
+      //   title: "electron-tabs on NPM",
+      //   src: "https://www.npmjs.com/package/electron-tabs",
+      //   badge: {
+      //     text: "5",
+      //     classname: "my-badge",
+      //   },
+      // });
+
+      // tabGroup.addTab({
+      //   title: "electron-tabs on Github",
+      //   src: "https://github.com/brrd/electron-tabs",
+      //   iconURL: "mark-github.svg",
+      //   active: true,
+      // });
+
+      // tabGroup.addTab({
+      //   title: "My Custom Tab",
+      //   src: "page.html",
+      //   ready: function (tab) {
+      //     tab.element.classList.add("my-custom-tab");
+      //   },
+      // });
+    </script>
+  </body>
+</html>

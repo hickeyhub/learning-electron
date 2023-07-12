@@ -4,7 +4,7 @@
   "description": "a electron desktop app for ion",
   "main": "main.js",
   "scripts": {
-    "start": "electron-forge start",
+    "dev": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
@@ -31,6 +31,7 @@
     "@electron-forge/maker-squirrel": "^6.2.1",
     "@electron-forge/maker-zip": "^6.2.1",
     "@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
-    "electron": "^25.2.0"
+    "electron": "^25.2.0",
+    "electron-reload": "2.0.0-alpha.1"
   }
 }
