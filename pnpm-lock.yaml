@@ -8,6 +8,9 @@ dependencies:
   electron-squirrel-startup:
     specifier: ^1.0.0
     version: 1.0.0
+  electron-tabs:
+    specifier: ^1.0.1
+    version: 1.0.1
 
 devDependencies:
   '@electron-forge/cli':
@@ -1116,6 +1119,10 @@ packages:
       debug: 2.6.9
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /electron-tabs@1.0.1:
+    resolution: {integrity: sha512-BwSDK0beANmcfedFB/FBZfTewLPniJKiWdK+5Eh0kqTLda2dqKNEoCqVvRqjJ81rHjhUKZANSY29ypMseCp+sA==}
     dev: false
 
   /electron-winstaller@5.1.0:

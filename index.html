@@ -18,57 +18,36 @@
     <script src="./components/tabs/index.js"></script>
     <script>
       const tabGroup = document.querySelector("tab-group");
+      var currentTab = null;
+      ipc.send("ready", "ready:ok");
 
       tabGroup.on("active", (tab) => {
         ipc.send("tab-active", tab[0].src);
-      });
-
-      tabGroup.setDefaultTab({
-        title: "经营管理中心",
-        src: "https://portaltest.ionrocking.com/",
-        active: true,
+        currentTab = tab;
       });
 
       tabGroup.addTab({
         title: "经营管理中心",
-        src: "https://portaltest.ionrocking.com/",
+        src: "https://portal.ionrocking.com/",
         active: true,
+        closable: false,
+      });
+
+      tabGroup.on("tab-added", (tab) => {
+        currentTab = tab;
       });
 
       ipc.on("add-tab", (src) => {
         tabGroup.addTab({
-          title: Date.now(),
+          title: "",
           src: src,
+          active: true,
         });
       });
-
-      tabGroup.on("ready", (tab) => {
-        ipc.send("ready", "ready:ok");
+      ipc.on("set-tab-title", (title) => {
+        if (currentTab && !currentTab.setTitle) return;
+        currentTab.setTitle(title);
       });
-
-      // tabGroup.addTab({
-      //   title: "electron-tabs on NPM",
-      //   src: "https://www.npmjs.com/package/electron-tabs",
-      //   badge: {
-      //     text: "5",
-      //     classname: "my-badge",
-      //   },
-      // });
-
-      // tabGroup.addTab({
-      //   title: "electron-tabs on Github",
-      //   src: "https://github.com/brrd/electron-tabs",
-      //   iconURL: "mark-github.svg",
-      //   active: true,
-      // });
-
-      // tabGroup.addTab({
-      //   title: "My Custom Tab",
-      //   src: "page.html",
-      //   ready: function (tab) {
-      //     tab.element.classList.add("my-custom-tab");
-      //   },
-      // });
     </script>
   </body>
 </html>

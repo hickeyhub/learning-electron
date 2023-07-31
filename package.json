@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/hickeyhub/learning-electron#readme",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-tabs": "^1.0.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.2.1",
