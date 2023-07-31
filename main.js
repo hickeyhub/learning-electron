@@ -1,6 +1,5 @@
 const path = require("path");
 const { app, BrowserWindow, BrowserView, ipcMain, Menu } = require("electron");
-const reload = require("electron-reload");
 
 let win, view;
 const createWindow = () => {
@@ -36,9 +35,11 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow();
-  reload(__dirname, {
-    electron: require(`${__dirname}/node_modules/electron`),
-  });
+  if (process.env.NODE_ENV === "development") {
+    require("electron-reload")(__dirname, {
+      electron: require(`${__dirname}/node_modules/electron`),
+    });
+  }
 });
 
 app.on("window-all-closed", () => {
