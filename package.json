@@ -1,37 +1,33 @@
 {
-  "name": "ionomc",
+  "name": "oms-ion",
   "version": "1.0.0",
-  "description": "a electron desktop app for ion",
-  "main": "main.js",
+  "description": "a desktop app for ionrocking, named oms-ion",
+  "main": "./.webpack/main",
   "scripts": {
-    "start": "electron-forge start",
+    "dev": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hickeyhub/learning-electron.git"
-  },
-  "keywords": [
-    "electron"
-  ],
   "author": "hickey",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/hickeyhub/learning-electron/issues"
-  },
-  "homepage": "https://github.com/hickeyhub/learning-electron#readme",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "sortablejs": "^1.15.2"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.2.1",
-    "@electron-forge/maker-deb": "^6.2.1",
-    "@electron-forge/maker-rpm": "^6.2.1",
-    "@electron-forge/maker-squirrel": "^6.2.1",
-    "@electron-forge/maker-zip": "^6.2.1",
-    "@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
-    "electron": "^25.2.0",
-    "electron-reload": "^2.0.0-alpha.1"
+    "@electron-forge/cli": "^7.3.0",
+    "@electron-forge/maker-deb": "^7.3.0",
+    "@electron-forge/maker-rpm": "^7.3.0",
+    "@electron-forge/maker-squirrel": "^7.3.0",
+    "@electron-forge/maker-zip": "^7.3.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.3.0",
+    "@electron-forge/plugin-fuses": "^7.2.0",
+    "@electron-forge/plugin-webpack": "^7.3.0",
+    "@electron/fuses": "^1.7.0",
+    "@vercel/webpack-asset-relocator-loader": "^1.7.3",
+    "css-loader": "^6.10.0",
+    "electron": "29.1.0",
+    "node-loader": "^2.0.0",
+    "style-loader": "^3.3.4"
   }
 }

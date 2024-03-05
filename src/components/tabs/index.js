@@ -1,3 +1,5 @@
+import Sortable from "sortablejs";
+
 if (!document) {
   throw Error("electron-tabs module must be called in renderer process");
 }

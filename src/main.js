@@ -1,4 +1,3 @@
-const path = require("path");
 const { app, BrowserWindow, BrowserView, ipcMain, Menu } = require("electron");
 
 let win, view;
@@ -7,10 +6,10 @@ const createWindow = () => {
     width: 1536,
     height: 864,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
-
+  debugger;
   win.webContents.setWindowOpenHandler(({ url }) => {
     win.webContents.loadURL(url);
     return { action: "deny" };
@@ -29,17 +28,11 @@ const createWindow = () => {
   ];
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
-
-  win.loadFile("index.html");
+  win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 };
 
 app.whenReady().then(() => {
   createWindow();
-  if (process.env.NODE_ENV === "development") {
-    require("electron-reload")(__dirname, {
-      electron: require(`${__dirname}/node_modules/electron`),
-    });
-  }
 });
 
 app.on("window-all-closed", () => {
@@ -77,6 +70,6 @@ ipcMain.on("ready", (event, arg) => {
   view.webContents.on("did-finish-load", () => {
     event.sender.send("set-tab-title", view.webContents.getTitle());
   });
-
   view.setAutoResize({ width: true, height: true });
 });
+
