@@ -1,4 +1,5 @@
 import Sortable from "sortablejs";
+import css from './style.css?raw';
 
 if (!document) {
   throw Error("electron-tabs module must be called in renderer process");
@@ -118,10 +119,7 @@ class TabGroup extends HTMLElement {
 
     // 导入样式
     const style = document.createElement("style");
-    style.textContent = `
-      @import "./components/tabs/style.css";
-      /* 在这里添加 Shadow DOM 中的样式 */
-    `;
+    style.textContent = css;
 
     shadow.appendChild(style);
     shadow.appendChild(wrapper);

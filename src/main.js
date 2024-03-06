@@ -1,75 +1,35 @@
-const { app, BrowserWindow, BrowserView, ipcMain, Menu } = require("electron");
+import './components/tabs/index.js'
 
-let win, view;
-const createWindow = () => {
-  win = new BrowserWindow({
-    width: 1536,
-    height: 864,
-    webPreferences: {
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-    },
-  });
-  debugger;
-  win.webContents.setWindowOpenHandler(({ url }) => {
-    win.webContents.loadURL(url);
-    return { action: "deny" };
-  });
-  const template = [
-    {
-      label: "toggle devtools",
-      click: () => {
-        if (view.webContents.isDevToolsOpened()) {
-          view.webContents.closeDevTools();
-        } else {
-          view.webContents.openDevTools();
-        }
-      },
-    },
-  ];
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
-  win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-};
+const tabGroup = document.querySelector("tab-group");
+var currentTab = null;
+ipc.send("ready", "ready:ok");
 
-app.whenReady().then(() => {
-  createWindow();
+tabGroup.on("active", (tab) => {
+  ipc.send("tab-active", tab[0].src);
+  currentTab = tab;
 });
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+
+tabGroup.addTab({
+  title: "经营管理中心",
+  src: "https://portal.ionrocking.com",
+  active: true,
+  closable: false,
 });
 
-app.on("activate", () => {
-  if (win === null) {
-    createWindow();
-  }
+tabGroup.on("tab-added", (tab) => {
+  currentTab = tab;
 });
 
-ipcMain.on("tab-active", (event, url) => {
-  view.webContents.loadURL(url);
-});
-
-ipcMain.on("ready", (event, arg) => {
-  view = new BrowserView();
-  win.setBrowserView(view);
-  view.setBounds({
-    x: 0,
-    y: 33,
-    width: win.getBounds().width,
-    height: win.getBounds().height - 33,
+ipc.on("add-tab", (src) => {
+  tabGroup.addTab({
+    title: "",
+    src: src,
+    active: true,
   });
-
-  view.webContents.setWindowOpenHandler(({ url }) => {
-    view.webContents.loadURL(url);
-    event.sender.send("add-tab", url);
-    return { action: "deny" };
-  });
-
-  view.webContents.on("did-finish-load", () => {
-    event.sender.send("set-tab-title", view.webContents.getTitle());
-  });
-  view.setAutoResize({ width: true, height: true });
 });
 
+ipc.on("set-tab-title", (title) => {
+  if (currentTab && !currentTab.setTitle) return;
+  currentTab.setTitle(title);
+});
