@@ -1,22 +1,28 @@
 import path from 'path';
-const { app, BrowserWindow, BrowserView, ipcMain, Menu, dialog } = require("electron");
+import { app, BrowserWindow, Menu, dialog, ipcMain, webContents } from "electron";
 
-let win, view;
+ipcMain.on('getWebContents', (ev, id) => {
+  const wc = webContents.fromId(id);
+  wc.setWindowOpenHandler(({ url }) => {
+    ev.sender.send('newWindow', url);
+    return { action: 'deny' };
+  });
+});
+
 const createWindow = () => {
-  win = new BrowserWindow({
+  let win = new BrowserWindow({
     width: 1536,
     height: 864,
+    icon: path.join(__dirname, '../renderer/assets/icon.ico'),
     webPreferences: {
+      webviewTag: true,
       preload: path.join(__dirname, '../preload/index.js'),
     },
   });
-  win.webContents.setWindowOpenHandler(({ url }) => {
-    win.webContents.loadURL(url);
-    return { action: "deny" };
-  });
+
   const template = [
     {
-      label: "main renderer",
+      label: "renderer devtools",
       click: () => {
         if (win.webContents.isDevToolsOpened()) {
           win.webContents.closeDevTools();
@@ -24,77 +30,20 @@ const createWindow = () => {
           win.webContents.openDevTools();
         }
       },
-    },
-    {
-      label: "view renderer",
-      click: () => {
-        if (view.webContents.isDevToolsOpened()) {
-          view.webContents.closeDevTools();
-        } else {
-          view.webContents.openDevTools();
-        }
-      },
-    },
+    }
   ];
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
   // Load the local URL for development or the local
   // html file for production
-  console.log(app.isPackaged, process.env['ELECTRON_RENDERER_URL'])
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     win.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
     win.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
-};
 
-app.whenReady().then(() => {
-  createWindow();
-});
-
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
-
-app.on("activate", () => {
-  if (win === null) {
-    createWindow();
-  }
-});
-
-ipcMain.on("tab-active", (event, url) => {
-  view.webContents.loadURL(url);
-});
-
-ipcMain.on("ready", (event, arg) => {
-  view = new BrowserView();
-
-  const [width, height] = win.getContentSize();
-
-  view.setBounds({
-    x: 0,
-    y: 33,
-    width: width,
-    height: height - 33,
-  });
-
-  win.setBrowserView(view);
-
-  view.webContents.setWindowOpenHandler(({ url }) => {
-    view.webContents.loadURL(url);
-    event.sender.send("add-tab", url);
-    return { action: "deny" };
-  });
-
-  view.webContents.on("did-finish-load", () => {
-    event.sender.send("set-tab-title", view.webContents.getTitle());
-  });
-
-
-  view.webContents.session.on("will-download", (event, item, webContents) => {
+  win.webContents.session.on("will-download", (event, item, webContents) => {
     const savePath = path.join(app.getPath('downloads'), item.getFilename());
     item.setSavePath(savePath);
 
@@ -117,8 +66,25 @@ ipcMain.on("ready", (event, arg) => {
       }
     });
   });
+};
 
-  view.setAutoResize({ width: true, height: true });
-
+app.whenReady().then(() => {
+  createWindow();
 });
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
+
+app.on("activate", () => {
+  if (win === null) {
+    createWindow();
+  }
+});
+
+// run this as early in the main process as possible
+if (require('electron-squirrel-startup')) app.quit();
+
 

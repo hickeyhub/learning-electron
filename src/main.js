@@ -1,35 +1,35 @@
-import './components/tabs/index.js'
-
+import 'electron-tabs'
 const tabGroup = document.querySelector("tab-group");
-var currentTab = null;
-ipc.send("ready", "ready:ok");
 
-tabGroup.on("active", (tab) => {
-  ipc.send("tab-active", tab[0].src);
-  currentTab = tab;
-});
-
+const readyHandler = (tab) => {
+  tab.webview.addEventListener('dom-ready', () => {
+    ipc.send('getWebContents', tab.webview.getWebContentsId())
+    tab.setTitle(tab.webview.getTitle());
+  });
+}
 
 tabGroup.addTab({
-  title: "经营管理中心",
+  title: "",
   src: "https://portal.ionrocking.com",
   active: true,
   closable: false,
+  webviewAttributes: {
+    allowpopups: true
+  },
+  ready: readyHandler
 });
 
-tabGroup.on("tab-added", (tab) => {
-  currentTab = tab;
-});
-
-ipc.on("add-tab", (src) => {
+ipc.on('newWindow', (ev, url) => {
   tabGroup.addTab({
     title: "",
-    src: src,
+    src: url,
     active: true,
+    webviewAttributes: {
+      allowpopups: true
+    },
+    ready: readyHandler
   });
 });
 
-ipc.on("set-tab-title", (title) => {
-  if (currentTab && !currentTab.setTitle) return;
-  currentTab.setTitle(title);
-});
+
+
