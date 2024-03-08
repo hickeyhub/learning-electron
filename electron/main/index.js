@@ -20,20 +20,7 @@ const createWindow = () => {
     },
   });
 
-  const template = [
-    {
-      label: "renderer devtools",
-      click: () => {
-        if (win.webContents.isDevToolsOpened()) {
-          win.webContents.closeDevTools();
-        } else {
-          win.webContents.openDevTools();
-        }
-      },
-    }
-  ];
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  Menu.setApplicationMenu(null);
 
   // Load the local URL for development or the local
   // html file for production
@@ -43,29 +30,29 @@ const createWindow = () => {
     win.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
 
-  win.webContents.session.on("will-download", (event, item, webContents) => {
-    const savePath = path.join(app.getPath('downloads'), item.getFilename());
-    item.setSavePath(savePath);
+  // win.webContents.session.on("will-download", (event, item, webContents) => {
+  //   const savePath = path.join(app.getPath('downloads'), item.getFilename());
+  //   item.setSavePath(savePath);
 
-    // 监听下载完成事件
-    item.once('done', (event, state) => {
-      if (state === 'completed') {
-        // 文件下载成功，弹出提示框
-        dialog.showMessageBox(win, {
-          type: 'info',
-          title: '文件下载',
-          message: '文件已成功下载到：' + savePath,
-        });
-      } else {
-        // 文件下载失败，弹出提示框
-        dialog.showMessageBox(win, {
-          type: 'error',
-          title: '文件下载',
-          message: '文件下载失败',
-        });
-      }
-    });
-  });
+  //   // 监听下载完成事件
+  //   item.once('done', (event, state) => {
+  //     if (state === 'completed') {
+  //       // 文件下载成功，弹出提示框
+  //       dialog.showMessageBox(win, {
+  //         type: 'info',
+  //         title: '文件下载',
+  //         message: '文件已成功下载到：' + savePath,
+  //       });
+  //     } else {
+  //       // 文件下载失败，弹出提示框
+  //       dialog.showMessageBox(win, {
+  //         type: 'error',
+  //         title: '文件下载',
+  //         message: '文件下载失败',
+  //       });
+  //     }
+  //   });
+  // });
 };
 
 app.whenReady().then(() => {
@@ -83,8 +70,5 @@ app.on("activate", () => {
     createWindow();
   }
 });
-
-// run this as early in the main process as possible
-if (require('electron-squirrel-startup')) app.quit();
 
 

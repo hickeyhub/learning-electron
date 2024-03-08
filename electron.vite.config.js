@@ -8,7 +8,6 @@ import { resolve } from 'path'
 export default {
   main: {
     build: {
-      outDir: 'dist/main',
       rollupOptions: {
         input: {
           index: resolve(__dirname, 'electron/main/index.js'),
@@ -18,7 +17,6 @@ export default {
   },
   preload: {
     build: {
-      outDir: 'dist/preload',
       rollupOptions: {
         input: {
           index: resolve(__dirname, 'electron/preload/index.js'),
@@ -29,7 +27,6 @@ export default {
   renderer: {
     root: '.',
     build: {
-      outDir: 'dist/renderer',
       rollupOptions: {
         input: {
           index: resolve(__dirname, 'index.html'),

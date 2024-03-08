@@ -6,6 +6,18 @@ const readyHandler = (tab) => {
     ipc.send('getWebContents', tab.webview.getWebContentsId())
     tab.setTitle(tab.webview.getTitle());
   });
+
+  tab.webview.addEventListener('context-menu', (e) => {
+    if (tab.webview.isDevToolsOpened()) {
+      if (window.confirm('close devtools?')) {
+        tab.webview.closeDevTools();
+      }
+    } else {
+      if (window.confirm('open devtools?')) {
+        tab.webview.openDevTools();
+      }
+    }
+  });
 }
 
 tabGroup.addTab({

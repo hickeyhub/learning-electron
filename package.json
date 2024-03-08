@@ -1,27 +1,24 @@
 {
   "name": "oms-ion",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "a desktop app for ionrocking, named oms-ion",
-  "main": "./dist/main/index.js",
+  "main": "./out/main/index.js",
   "author": "hickey",
   "license": "MIT",
   "scripts": {
     "dev": "electron-vite dev --watch",
     "start": "electron-vite preview",
     "build": "electron-vite build",
-    "package": "electron-vite build && electron-forge package",
-    "make": "electron-vite build &&  electron-forge make"
+    "release": "npm run build && electron-builder --config electron-builder.config.js"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0",
     "electron-tabs": "^1.0.4"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^7.3.0",
-    "@electron-forge/maker-squirrel": "^7.3.0",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.3.0",
     "electron": "^29.1.0",
+    "electron-builder": "^24.13.3",
     "electron-vite": "^2.1.0",
-    "sortablejs": "^1.15.2"
+    "vite": "^5.1.5"
   }
+  
 }
