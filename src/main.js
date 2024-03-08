@@ -8,25 +8,20 @@ const readyHandler = (tab) => {
   });
 
   tab.webview.addEventListener('context-menu', (e) => {
-    if (tab.webview.isDevToolsOpened()) {
-      if (window.confirm('close devtools?')) {
-        tab.webview.closeDevTools();
-      }
-    } else {
-      if (window.confirm('open devtools?')) {
-        tab.webview.openDevTools();
-      }
-    }
+    const { x, y } = e;
+    const id = tab.webview.getWebContentsId();
+    ipc.send('show-context-menu', { id, x, y });
   });
 }
 
 tabGroup.addTab({
   title: "",
   src: "https://portal.ionrocking.com",
+  // src: "http://localhost:8080",
   active: true,
   closable: false,
   webviewAttributes: {
-    allowpopups: true
+    allowpopups: true,
   },
   ready: readyHandler
 });
@@ -37,7 +32,7 @@ ipc.on('newWindow', (ev, url) => {
     src: url,
     active: true,
     webviewAttributes: {
-      allowpopups: true
+      allowpopups: true,
     },
     ready: readyHandler
   });

@@ -1,5 +1,5 @@
 import path from 'path';
-import { app, BrowserWindow, Menu, dialog, ipcMain, webContents } from "electron";
+import { app, BrowserWindow, Menu, session, dialog, ipcMain, webContents } from "electron";
 
 ipcMain.on('getWebContents', (ev, id) => {
   const wc = webContents.fromId(id);
@@ -7,6 +7,49 @@ ipcMain.on('getWebContents', (ev, id) => {
     ev.sender.send('newWindow', url);
     return { action: 'deny' };
   });
+});
+
+ipcMain.on('show-context-menu', (ev, { id, x, y }) => {
+  const wc = webContents.fromId(id);
+  Menu.buildFromTemplate([
+    {
+      label: 'forward',
+      click: () => {
+        wc.goForward();
+      },
+    },
+    {
+      label: 'back',
+      click: () => {
+        wc.goBack();
+      },
+    },
+    {
+      label: 'refresh',
+      click: () => {
+        wc.reload();
+      },
+    },
+    {
+      label: 'reloadIgnoringCache',
+      click: () => {
+        wc.reloadIgnoringCache();
+      },
+    },
+    {
+      label: 'account login',
+      click: () => {
+        const url = wc.getURL().replace(/\/[^/]*$/, '/sys_login');
+        wc.loadURL(url);
+      },
+    },
+    {
+      label: 'openDevTools',
+      click: () => {
+        wc.openDevTools();
+      },
+    },
+  ]).popup({ window: BrowserWindow.getFocusedWindow(), x, y });
 });
 
 const createWindow = () => {
@@ -21,6 +64,30 @@ const createWindow = () => {
   });
 
   Menu.setApplicationMenu(null);
+
+  win.webContents.on('context-menu', (e, params) => {
+    const { x, y } = params;
+    Menu.buildFromTemplate([
+      {
+        label: 'openDevTools',
+        click: () => {
+          win.webContents.openDevTools();
+        },
+      },
+      {
+        label: 'showCookies',
+        click: () => {
+          session.defaultSession.cookies.get({}).then((cookies) => {
+            dialog.showMessageBox(win, {
+              type: 'info',
+              title: 'defaultSession',
+              message: JSON.stringify(cookies, null, 2),
+            });
+          });
+        },
+      }
+    ]).popup({ window: win, x, y });
+  });
 
   // Load the local URL for development or the local
   // html file for production
