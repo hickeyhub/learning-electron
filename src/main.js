@@ -16,7 +16,7 @@ const readyHandler = (tab) => {
 
 tabGroup.addTab({
   title: "",
-  src: "https://portal.ionrocking.com",
+  src: `https://portal.ionrocking.com/index.html?v=${Date.now()}`,
   // src: "http://localhost:8080",
   active: true,
   closable: false,
